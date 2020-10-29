@@ -82,6 +82,16 @@
         :formatter="formatter"
       />
     </demo-block>
+    <demo-block card :title="t('eventUsage')">
+      <van-datetime-picker
+        v-model="value.date"
+        type="date"
+        :title="t('dateType')"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @change="change"
+      />
+    </demo-block>
   </demo-section>
 </template>
 
@@ -153,6 +163,10 @@ export default {
       }
 
       return values;
+    },
+    change(Picker) {
+      console.info('change', Picker);
+      console.info(Picker.getValues());
     },
   },
 };

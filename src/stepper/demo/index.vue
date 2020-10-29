@@ -74,16 +74,16 @@ export default {
 
   data() {
     return {
-      stepper1: 1,
-      stepper2: 1,
-      stepper3: 1,
-      stepper4: 1,
-      stepper5: 1,
-      stepper6: 1,
-      stepper7: 1,
-      stepper8: 1,
-      stepperRound: 1,
-      disabledInput: 1,
+      stepper1: 0,
+      stepper2: 0,
+      stepper3: 0,
+      stepper4: 0,
+      stepper5: 0,
+      stepper6: 0,
+      stepper7: 0,
+      stepper8: 0,
+      stepperRound: 0,
+      disabledInput: 0,
     };
   },
 

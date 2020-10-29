@@ -140,6 +140,7 @@ export default createComponent({
         input: this.onInput,
         click: this.onClickInput,
         keypress: this.onKeypress,
+        change: this.onChange,
       };
     },
 
@@ -322,6 +323,10 @@ export default createComponent({
       if (value !== this.value) {
         this.$emit('input', value);
       }
+    },
+
+    onChange(event) {
+      this.$emit('change', event.target.value);
     },
 
     onInput(event) {

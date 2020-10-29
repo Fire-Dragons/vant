@@ -43,7 +43,7 @@ export default createComponent({
     },
     min: {
       type: [Number, String],
-      default: 1,
+      default: 0,
     },
     max: {
       type: [Number, String],
@@ -55,7 +55,7 @@ export default createComponent({
     },
     defaultValue: {
       type: [Number, String],
-      default: 1,
+      default: 0,
     },
     showPlus: {
       type: Boolean,
@@ -81,6 +81,8 @@ export default createComponent({
 
     return {
       currentValue: value,
+      focused: false,
+      oldValue: defaultValue,
     };
   },
 
@@ -135,9 +137,12 @@ export default createComponent({
       }
     },
 
-    currentValue(val) {
+    currentValue(val, oldValue) {
+      this.oldValue = oldValue;
       this.$emit('input', val);
-      this.$emit('change', val, { name: this.name });
+      if (!this.focused) {
+        this.$emit('change', val, this.oldValue);
+      }
     },
   },
 
@@ -192,10 +197,12 @@ export default createComponent({
       this.emitChange(formatted);
     },
 
-    emitChange(value) {
+    emitChange(value, oldValue) {
       if (this.asyncChange) {
         this.$emit('input', value);
-        this.$emit('change', value, { name: this.name });
+        if (!this.focused) {
+          this.$emit('change', value, oldValue);
+        }
       } else {
         this.currentValue = value;
       }
@@ -213,11 +220,12 @@ export default createComponent({
 
       const value = this.format(add(+this.currentValue, diff));
 
-      this.emitChange(value);
+      this.emitChange(value, this.currentValue);
       this.$emit(type);
     },
 
     onFocus(event) {
+      this.focused = true;
       // readonly not work in lagacy mobile safari
       if (this.disableInput && this.$refs.input) {
         this.$refs.input.blur();
@@ -227,6 +235,7 @@ export default createComponent({
     },
 
     onBlur(event) {
+      this.focused = false;
       const value = this.format(event.target.value);
       event.target.value = value;
       this.currentValue = value;
@@ -246,7 +255,7 @@ export default createComponent({
       if (!this.longPress) {
         return;
       }
-
+      this.focused = true;
       clearTimeout(this.longPressTimer);
       this.isLongPress = false;
 
@@ -261,7 +270,7 @@ export default createComponent({
       if (!this.longPress) {
         return;
       }
-
+      this.focused = false;
       clearTimeout(this.longPressTimer);
 
       if (this.isLongPress) {

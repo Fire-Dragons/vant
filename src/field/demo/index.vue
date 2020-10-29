@@ -10,6 +10,7 @@
     <autosize />
     <show-word-limit />
     <input-align />
+    <event-usage />
   </demo-section>
 </template>
 
@@ -24,6 +25,7 @@ import FormatValue from './FormatValue';
 import Autosize from './Autosize';
 import ShowWordLimit from './ShowWordLimit';
 import InputAlign from './InputAlign';
+import EventUsage from './EventUsage';
 
 export default {
   components: {
@@ -37,6 +39,7 @@ export default {
     Autosize,
     ShowWordLimit,
     InputAlign,
+    EventUsage,
   },
 };
 </script>
