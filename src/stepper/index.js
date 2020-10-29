@@ -138,8 +138,10 @@ export default createComponent({
     },
 
     currentValue(val, oldValue) {
-      this.oldValue = oldValue;
       this.$emit('input', val);
+      if (this.format(val) !== this.format(oldValue)) {
+        this.oldValue = this.format(oldValue);
+      }
       if (!this.focused) {
         this.$emit('change', val, this.oldValue);
       }
@@ -197,11 +199,11 @@ export default createComponent({
       this.emitChange(formatted);
     },
 
-    emitChange(value, oldValue) {
+    emitChange(value) {
       if (this.asyncChange) {
         this.$emit('input', value);
         if (!this.focused) {
-          this.$emit('change', value, oldValue);
+          this.$emit('change', value, this.oldValue);
         }
       } else {
         this.currentValue = value;
@@ -219,8 +221,7 @@ export default createComponent({
       const diff = type === 'minus' ? -this.step : +this.step;
 
       const value = this.format(add(+this.currentValue, diff));
-
-      this.emitChange(value, this.currentValue);
+      this.emitChange(value);
       this.$emit(type);
     },
 
