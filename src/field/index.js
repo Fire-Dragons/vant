@@ -78,6 +78,10 @@ export default createComponent({
       type: String,
       default: 'onChange',
     },
+    isSlot: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data() {
@@ -456,6 +460,10 @@ export default createComponent({
       const inputAlign = this.getProp('inputAlign');
 
       if (inputSlot) {
+        Object.keys(inputSlot).forEach(element => {
+          const slot = inputSlot[element]
+          slot['componentOptions']['propsData']['isSlot'] = true
+        })
         return (
           <div
             class={bem('control', [inputAlign, 'custom'])}
@@ -465,7 +473,6 @@ export default createComponent({
           </div>
         );
       }
-
       const inputProps = {
         ref: 'input',
         class: bem('control', inputAlign),
@@ -488,7 +495,6 @@ export default createComponent({
           },
         ],
       };
-
       if (type === 'textarea') {
         return <textarea {...inputProps} />;
       }
@@ -603,12 +609,19 @@ export default createComponent({
     if (Label) {
       scopedSlots.title = () => Label;
     }
-
     const extra = this.slots('extra');
     if (extra) {
       scopedSlots.extra = () => extra;
     }
-
+    const Class = [bem({
+      error: this.showError,
+      disabled: this.disabled,
+      [`label-${labelAlign}`]: labelAlign,
+      'min-height': this.type === 'textarea' && !this.autosize,
+    })]
+    if (this.isSlot) {
+      // 插槽中使用添加control样式
+      Class.push(bem('control'))}
     return (
       <Cell
         icon={this.leftIcon}
@@ -623,12 +636,7 @@ export default createComponent({
         titleClass={[bem('label', labelAlign), this.labelClass]}
         scopedSlots={scopedSlots}
         arrowDirection={this.arrowDirection}
-        class={bem({
-          error: this.showError,
-          disabled: this.disabled,
-          [`label-${labelAlign}`]: labelAlign,
-          'min-height': this.type === 'textarea' && !this.autosize,
-        })}
+        class={Class}
         onClick={this.onClick}
       >
         <div class={bem('body')}>
