@@ -16,7 +16,11 @@ function gen(name: string, mods?: Mods): string {
   }
 
   if (typeof mods === 'string') {
-    return ` ${name}--${mods}`;
+    let result = ` ${name}--${mods}`
+    if (mods === 'required') {
+      result = ` is-required`
+    }
+    return result;
   }
 
   if (Array.isArray(mods)) {

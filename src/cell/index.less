@@ -1,6 +1,18 @@
 @import '../style/var';
 @import '../style/mixins/hairline';
 
+.is-required {
+  overflow: visible;
+
+  &::before {
+    position: absolute;
+    left: @padding-xs;
+    color: @cell-required-color;
+    font-size: @cell-font-size;
+    content: '*';
+  }
+}
+
 .van-cell {
   position: relative;
   display: flex;
