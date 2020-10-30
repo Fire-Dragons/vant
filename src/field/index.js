@@ -462,7 +462,7 @@ export default createComponent({
       if (inputSlot) {
         Object.keys(inputSlot).forEach(element => {
           const slot = inputSlot[element]
-          if ('componentOptions' in slot) {
+          if ('componentOptions' in slot && slot['componentOptions']) {
             slot['componentOptions']['propsData']['isSlot'] = true
           } else {
             slot['data']['attrs']['isSlot'] = true
