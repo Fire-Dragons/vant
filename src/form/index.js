@@ -6,6 +6,7 @@ const [createComponent, bem] = createNamespace('form');
 export default createComponent({
   props: {
     colon: Boolean,
+    rules: Object,
     labelWidth: [Number, String],
     labelAlign: String,
     inputAlign: String,
@@ -28,6 +29,10 @@ export default createComponent({
       type: Boolean,
       default: true,
     },
+    validateOnRuleChange: {
+      type: Boolean,
+      default: true
+    },
   },
 
   provide() {
@@ -35,13 +40,24 @@ export default createComponent({
       vanForm: this,
     };
   },
+  watch: {
+    rules() {
+      // remove then add event listeners on form-item after form rules change
+      this.fields.forEach(field => {
+        field.resetValidation();
+      });
+
+      if (this.validateOnRuleChange) {
+        this.validate(() => {});
+      }
+    }
+  },
 
   data() {
     return {
       fields: [],
     };
   },
-
   methods: {
     validateSeq() {
       return new Promise((resolve, reject) => {

@@ -9,6 +9,7 @@ import {
   isPromise,
   isFunction,
   createNamespace,
+  getPropByPath,
 } from '../utils';
 
 // Components
@@ -207,6 +208,33 @@ export default createComponent({
       return true;
     },
 
+    getRules() {
+      let formRules = this.vanForm.rules;
+      const selfRules = this.rules;
+      const requiredRule = this.required !== undefined ? { required: !!this.required } : [];
+
+      const name = getPropByPath(formRules, this.name || '', null);
+      formRules = formRules ? (name.o[this.name || ''] || name.v) : [];
+
+      return [].concat(selfRules || formRules || []).concat(requiredRule);
+    },
+
+    getFilteredRule(trigger) {
+      const defaultTrigger = this.vanForm.validateTrigger === trigger;
+      const rules = this.getRules();
+
+      return rules.filter(rule => {
+        if (!rule.trigger || trigger === '') return true;
+        let result = defaultTrigger
+        if (Array.isArray(rule.trigger)) {
+          result = rule.trigger.indexOf(trigger) > -1;
+        } else if (rule.trigger) {
+          result = rule.trigger === trigger;
+        }
+        return result
+      }).map(rule => ({ ...rule}));
+    },
+
     getRuleMessage(value, rule) {
       const { message } = rule;
 
@@ -250,7 +278,7 @@ export default createComponent({
       );
     },
 
-    validate(rules = this.rules) {
+    validate(rules = this.getFilteredRule()) {
       return new Promise((resolve) => {
         if (!rules) {
           resolve();
@@ -271,15 +299,16 @@ export default createComponent({
     },
 
     validateWithTrigger(trigger) {
-      if (this.vanForm && this.rules) {
-        const defaultTrigger = this.vanForm.validateTrigger === trigger;
-        const rules = this.rules.filter((rule) => {
-          if (rule.trigger) {
-            return rule.trigger === trigger;
-          }
-
-          return defaultTrigger;
-        });
+      if (this.vanForm && this.getRules()) {
+        // const defaultTrigger = this.vanForm.validateTrigger === trigger;
+        const rules = this.getFilteredRule(trigger)
+        // const rules = this.rules.filter((rule) => {
+        //   if (rule.trigger) {
+        //     return rule.trigger === trigger;
+        //   }
+        //
+        //   return defaultTrigger;
+        // });
 
         this.validate(rules);
       }
