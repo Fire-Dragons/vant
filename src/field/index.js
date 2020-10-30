@@ -462,7 +462,11 @@ export default createComponent({
       if (inputSlot) {
         Object.keys(inputSlot).forEach(element => {
           const slot = inputSlot[element]
-          slot['componentOptions']['propsData']['isSlot'] = true
+          if ('componentOptions' in slot) {
+            slot['componentOptions']['propsData']['isSlot'] = true
+          } else {
+            slot['data']['attrs']['isSlot'] = true
+          }
         })
         return (
           <div
@@ -619,7 +623,11 @@ export default createComponent({
       [`label-${labelAlign}`]: labelAlign,
       'min-height': this.type === 'textarea' && !this.autosize,
     })]
-    if (this.isSlot) {
+    let isSlot = this.isSlot
+    if ( !isSlot && 'isSlot' in this.$attrs) {
+      isSlot = this.$attrs['isSlot']
+    }
+    if (isSlot) {
       // 插槽中使用添加control样式
       Class.push(bem('control'))}
     return (
