@@ -17,7 +17,7 @@ function gen(name: string, mods?: Mods): string {
 
   if (typeof mods === 'string') {
     let result = ` ${name}--${mods}`
-    if (mods === 'required') {
+    if (name === 'van-cell' && mods === 'required') {
       result = ` is-required`
     }
     return result;
