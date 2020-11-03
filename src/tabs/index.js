@@ -142,7 +142,7 @@ export default createComponent({
     },
 
     children() {
-      this.setCurrentIndexByName(this.currentName || this.active);
+      this.setCurrentIndexByName(this.active || this.currentName);
       this.setLine();
 
       this.$nextTick(() => {
@@ -189,7 +189,6 @@ export default createComponent({
         this.inited = true;
         this.tabHeight = getVisibleHeight(this.$refs.wrap);
         this.scrollIntoView(true);
-        this.scrollToCurrentContent(true);
       });
     },
 
@@ -241,19 +240,23 @@ export default createComponent({
     },
 
     setCurrentIndex(currentIndex) {
-      currentIndex = this.findAvailableTab(currentIndex);
+      const newIndex = this.findAvailableTab(currentIndex);
 
-      if (isDef(currentIndex) && currentIndex !== this.currentIndex) {
-        const shouldEmitChange = this.currentIndex !== null;
-        this.currentIndex = currentIndex;
-        this.$emit('input', this.currentName);
+      if (!isDef(newIndex)) {
+        return;
+      }
+
+      const newTab = this.children[newIndex];
+      const newName = newTab.computedName;
+      const shouldEmitChange = this.currentIndex !== null;
+
+      this.currentIndex = newIndex;
+
+      if (newName !== this.active) {
+        this.$emit('input', newName);
 
         if (shouldEmitChange) {
-          this.$emit(
-            'change',
-            this.currentName,
-            this.children[currentIndex].title
-          );
+          this.$emit('change', newName, newTab.title);
         }
       }
     },
