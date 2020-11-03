@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-input
+    <van-field
       :id="id"
       :ref="widget.model"
       v-model="dataModel"
@@ -9,7 +9,7 @@
       is-link
       @click="handleSelect2()"
     >
-      <template>
+      <template #input>
         <span v-if="select2Items.length < 1" style="color: #cbc9cf">请选择</span>
         <div v-else class="select2-box">
           <ul>
@@ -20,7 +20,7 @@
           </ul>
         </div>
       </template>
-    </van-input>
+    </van-field>
     <van-popup v-model="dialogVisible" :overlay="false" position="right" :style="{ height: '100%', width: '100%' }">
       <fm-select
         :select-multiple="multiple"

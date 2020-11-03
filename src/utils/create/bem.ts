@@ -34,15 +34,14 @@ function gen(name: string, mods?: Mods): string {
 }
 
 export function createBEM(name: string) {
-  return function (el?: Mods, mods?: Mods): Mods {
+  return function (el?: Mods, mods?: Mods, NoRootClass?: any): Mods {
     if (el && typeof el !== 'string') {
       mods = el;
       el = '';
     }
-
     el = el ? `${name}__${el}` : name;
-
-    return `${el}${gen(el, mods)}`;
+    return NoRootClass ? `${gen(el, mods)}` : `${el}${gen(el, mods)}`
+    // return `${el}${gen(el, mods)}`
   };
 }
 

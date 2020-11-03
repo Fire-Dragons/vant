@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <van-cell>
     <van-field
       v-show="widget.type != 'divider' && show"
       :name="widget.model"
@@ -11,6 +11,8 @@
         'no-label-form-item': widget.options.isLabelWidth && widget.options.labelWidth == 0
       }"
       :required="widget.options.required"
+      @click-left-icon="clickLeftIcon"
+      :left-icon="widget.options.fieldTips ? 'question-o' : ''"
     >
       <template #input>
         <generate-element-item
@@ -32,10 +34,12 @@
             <slot :name="blank.name" :model="scope.model" />
           </template>
         </generate-element-item>
-<!--          <div class="tips" :style="{color: widget.options.textColor}">-->
-<!--            {{ widget.options.fieldTips }}-->
-<!--          </div>-->
       </template>
+<!--      <template #CellLabel>-->
+<!--        <div class="tips" :style="{color: widget.options.textColor}">-->
+<!--          {{ widget.options.fieldTips }}-->
+<!--        </div>-->
+<!--      </template>-->
     </van-field>
     <van-divider
       v-if="widget.type == 'divider' && show"
@@ -43,12 +47,14 @@
     >
       {{ widget.name }}
     </van-divider>
-  </div>
+  </van-cell>
 </template>
 
 <script>
 import GenerateElementItem from './GenerateElementItem'
 import Vue from 'vue'
+import Dialog from '@/dialog';
+import Notify from '@/notify';
 
 export default {
   components: {
@@ -101,6 +107,12 @@ export default {
   //   console.log('66', this.models)
   // },
   methods: {
+    clickLeftIcon(e) {
+      Dialog.alert({
+        title: '提示',
+        message: this.widget.options.fieldTips
+      })
+    },
   }
 }
 </script>

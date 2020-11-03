@@ -2,6 +2,7 @@
 import { resetScroll } from '../utils/dom/reset-scroll';
 import { formatNumber } from '../utils/format/number';
 import { preventDefault } from '../utils/dom/event';
+import { FieldMixin } from '../mixins/field';
 import {
   isDef,
   addUnit,
@@ -22,10 +23,14 @@ const [createComponent, bem] = createNamespace('field');
 export default createComponent({
   inheritAttrs: false,
 
+  mixins: [FieldMixin],
+
   provide() {
-    return {
-      vanField: this,
-    };
+    if (!this.vanField) {
+      return {
+        vanField: this,
+      };
+    }
   },
 
   inject: {
@@ -95,24 +100,30 @@ export default createComponent({
   watch: {
     value() {
       this.updateValue(this.value);
-      this.resetValidation();
-      this.validateWithTrigger('onChange');
+      if (!this.vanField) {
+        this.resetValidation();
+        this.validateWithTrigger('onChange');
+      }
       this.$nextTick(this.adjustSize);
     },
   },
 
   mounted() {
-    this.updateValue(this.value, this.formatTrigger);
-    this.$nextTick(this.adjustSize);
+    if (!this.vanField) {
+      this.updateValue(this.value, this.formatTrigger);
+      this.$nextTick(this.adjustSize);
 
-    if (this.vanForm) {
-      this.vanForm.addField(this);
+      if (this.vanForm) {
+        this.vanForm.addField(this);
+      }
     }
   },
 
   beforeDestroy() {
-    if (this.vanForm) {
-      this.vanForm.removeField(this);
+    if (!this.vanField) {
+      if (this.vanForm) {
+        this.vanForm.removeField(this);
+      }
     }
   },
 
@@ -386,7 +397,11 @@ export default createComponent({
       this.focused = false;
       this.updateValue(this.value, 'onBlur');
       this.$emit('blur', event);
-      this.validateWithTrigger('onBlur');
+      if (this.vanField) {
+        this.vanField.onBlur(event)
+      } else {
+        this.validateWithTrigger('onBlur');
+      }
       resetScroll();
     },
 
@@ -454,23 +469,30 @@ export default createComponent({
       }
     },
 
+    // ChangeSlot(slots) {
+    //   Object.keys(slots).forEach(element => {
+    //     const slot = slots[element]
+    //     if (slot.children) {
+    //       this.ChangeSlot(slot.children)
+    //     } else {
+    //       if (slot.componentOptions && 'componentOptions' in slot) {
+    //         slot.componentOptions.propsData.isSlot = true
+    //       } else if (slot.data && 'attrs' in slot.data) {
+    //         slot.data.attrs.isSlot = true
+    //       }
+    //     }
+    //   })
+    // },
+
     genInput() {
       const { type } = this;
       const inputSlot = this.slots('input');
       const inputAlign = this.getProp('inputAlign');
-
       if (inputSlot) {
-        Object.keys(inputSlot).forEach(element => {
-          const slot = inputSlot[element]
-          if ('componentOptions' in slot && slot['componentOptions']) {
-            slot['componentOptions']['propsData']['isSlot'] = true
-          } else {
-            slot['data']['attrs']['isSlot'] = true
-          }
-        })
         return (
           <div
-            class={bem('control', [inputAlign, 'custom'])}
+            // class={bem('control', [inputAlign, 'custom'])}
+            class={bem('control', [inputAlign])}
             onClick={this.onClickInput}
           >
             {inputSlot}
@@ -608,7 +630,6 @@ export default createComponent({
     const scopedSlots = {
       icon: this.genLeftIcon,
     };
-
     const Label = this.genLabel();
     if (Label) {
       scopedSlots.title = () => Label;
@@ -617,19 +638,10 @@ export default createComponent({
     if (extra) {
       scopedSlots.extra = () => extra;
     }
-    const Class = [bem({
-      error: this.showError,
-      disabled: this.disabled,
-      [`label-${labelAlign}`]: labelAlign,
-      'min-height': this.type === 'textarea' && !this.autosize,
-    })]
-    let isSlot = this.isSlot
-    if ( !isSlot && 'isSlot' in this.$attrs) {
-      isSlot = this.$attrs['isSlot']
+    const CellLabel = this.slots('CellLabel')
+    if (CellLabel) {
+      scopedSlots.label = () => CellLabel;
     }
-    if (isSlot) {
-      // 插槽中使用添加control样式
-      Class.push(bem('control'))}
     return (
       <Cell
         icon={this.leftIcon}
@@ -644,7 +656,12 @@ export default createComponent({
         titleClass={[bem('label', labelAlign), this.labelClass]}
         scopedSlots={scopedSlots}
         arrowDirection={this.arrowDirection}
-        class={Class}
+        class={bem({
+           error: this.showError,
+           disabled: this.disabled,
+           [`label-${labelAlign}`]: labelAlign,
+           'min-height': this.type === 'textarea' && !this.autosize,
+          })}
         onClick={this.onClick}
       >
         <div class={bem('body')}>

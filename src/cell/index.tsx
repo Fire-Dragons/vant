@@ -127,7 +127,7 @@ function Cell(
 
   return (
     <div
-      class={bem(classes)}
+      class={[bem(classes, undefined, !showTitle), bem({ input: !showTitle })]}
       role={clickable ? 'button' : null}
       tabindex={clickable ? 0 : null}
       onClick={onClick}

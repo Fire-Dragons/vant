@@ -31,7 +31,7 @@
 
     <template v-if="widget.type == 'input'">
       <template v-if="widget.options.dataType == 'number' || widget.options.dataType == 'integer' || widget.options.dataType == 'float'">
-        <van-input
+        <van-field
           :id="id"
           :ref="widget.model"
           v-model.number="dataLabel"
@@ -49,11 +49,11 @@
           <template v-if="fieldUnit" slot="extra">
             <span style="color: #969696;">{{ fieldUnit }}</span>
           </template>
-        </van-input>
+        </van-field>
         <!-- <div v-if="widget.options.dataType == 'money' && dataLabel && widget.options.uppercase" class="tips">{{ Capitalization | toChies }}</div> -->
       </template>
       <template v-else-if="widget.options.dataType == 'money'">
-        <van-input
+        <van-field
           :id="id"
           :ref="widget.model"
           v-model.number="dataLabel"
@@ -71,13 +71,13 @@
           <template v-if="fieldUnit" slot="extra">
             <span style="color: #969696;">{{ fieldUnit }}</span>
           </template>
-        </van-input>
+        </van-field>
         <div v-if="dataLabel && widget.options.uppercase" class="tips">
           {{ Capitalization | toChies }}
         </div>
       </template>
 
-      <van-input
+      <van-field
         v-else
         :id="id"
         :ref="widget.model"
@@ -94,11 +94,11 @@
         <template v-if="fieldUnit" slot="extra">
           <span style="color: #969696;">{{ fieldUnit }}</span>
         </template>
-      </van-input>
+      </van-field>
     </template>
 
     <template v-if="widget.type == 'textarea'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
@@ -125,7 +125,7 @@
           @focus="events['focus']"
           @change="events['change']"
         />
-<!--        <van-input-->
+<!--        <van-field-->
 <!--          :id="id"-->
 <!--          :ref="widget.model"-->
 <!--          :disabled="!edit || isDisable"-->
@@ -138,13 +138,13 @@
 <!--              @change="events['change']"-->
 <!--            />-->
 <!--          </template>-->
-<!--        </van-input>-->
+<!--        </van-field>-->
         <span v-if="widget.options.unit" class="fm-unit">{{ widget.options.unit }}</span>
       </div>
     </template>
 
     <template v-if="widget.type == 'radio'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="showDataModel"
@@ -172,7 +172,7 @@
     </template>
 
     <template v-if="widget.type == 'checkbox'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="showDataModel"
@@ -210,7 +210,7 @@
     </template>
 
     <template v-if="widget.type == 'time'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
@@ -230,7 +230,7 @@
     </template>
 
     <template v-if="widget.type=='date'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
@@ -253,7 +253,7 @@
     </template>
 
     <template v-if="widget.type =='rate'">
-<!--      <van-input-->
+<!--      <van-field-->
 <!--        :id="id"-->
 <!--        :ref="widget.model"-->
 <!--        :disabled="!edit || isDisable"-->
@@ -267,7 +267,7 @@
 <!--            @change="events['change']"-->
 <!--          />-->
 <!--        </template>-->
-<!--      </van-input>-->
+<!--      </van-field>-->
       <van-rate
         v-model="dataModel"
         :id="id"
@@ -291,7 +291,7 @@
     </template> -->
 
     <template v-if="widget.type == 'select'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="showDataModel"
@@ -350,7 +350,7 @@
     </template>
 
     <template v-if="widget.type=='switch'">
-<!--      <van-input-->
+<!--      <van-field-->
 <!--        :id="id"-->
 <!--        :ref="widget.model"-->
 <!--        :disabled="!edit || isDisable"-->
@@ -363,7 +363,7 @@
 <!--            @change="events['change']"-->
 <!--          />-->
 <!--        </template>-->
-<!--      </van-input>-->
+<!--      </van-field>-->
       <van-switch
         v-model="dataModel"
         :id="id"
@@ -375,7 +375,7 @@
     </template>
 
     <template v-if="widget.type=='slider'">
-<!--      <van-input-->
+<!--      <van-field-->
 <!--        :id="id"-->
 <!--        :ref="widget.model"-->
 <!--        :disabled="!edit || isDisable"-->
@@ -391,7 +391,7 @@
 <!--            @input="events['input']"-->
 <!--          />-->
 <!--        </template>-->
-<!--      </van-input>-->
+<!--      </van-field>-->
       <van-slider
         v-model="dataModel"
         :id="id"
@@ -426,7 +426,7 @@
         :is-edit="widget.options.isEdit"
         :action="widget.options.action"
       />
-<!--      <van-input-->
+<!--      <van-field-->
 <!--        :id="id"-->
 <!--        :ref="widget.model"-->
 <!--        v-model="dataModel"-->
@@ -455,7 +455,7 @@
 <!--            :action="widget.options.action"-->
 <!--          />-->
 <!--        </template>-->
-<!--      </van-input>-->
+<!--      </van-field>-->
     </template>
 
     <!-- <template v-if="widget.type == 'editor'">
@@ -471,7 +471,7 @@
     </template> -->
 
     <template v-if="widget.type == 'cascader'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="showDataModel"
@@ -517,7 +517,7 @@
     </template>
 
     <template v-if="widget.type == 'text'">
-      <van-input
+      <van-field
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
@@ -533,7 +533,7 @@
         :ref="widget.model"
         :disabled="!edit || isDisable"
       />
-<!--      <van-input-->
+<!--      <van-field-->
 <!--        :id="id"-->
 <!--        :ref="widget.model"-->
 <!--        v-model="dataModel"-->
@@ -542,7 +542,7 @@
 <!--        <template #default>-->
 <!--          <span v-html="dataModel" />-->
 <!--        </template>-->
-<!--      </van-input>-->
+<!--      </van-field>-->
     </template>
 
     <template v-if="widget.type == 'innerobject'">
