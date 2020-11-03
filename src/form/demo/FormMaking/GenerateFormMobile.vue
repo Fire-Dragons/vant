@@ -220,7 +220,6 @@ export default {
     this._initForm()
   },
   mounted() {
-    console.info(this.rules)
     this.helpers.generate = this
     this.helpers.generateForm = this.$refs['generateForm']
     const events = this.data.config.events || {}
