@@ -1,11 +1,43 @@
 <template>
   <demo-block :title="t('basicUsage')">
-    <van-form @submit="onSubmit" @failed="onFailed">
+    <van-form @submit="onSubmit" @failed="onFailed" :rules="rules">
+      <van-field
+        name="username"
+        label="test"
+        isLink
+        >
+        <template #input>
+          <div>
+            <van-input
+              v-model="username"
+              :placeholder="t('username')"
+              clearable
+            >
+            </van-input>
+          </div>
+        </template>
+      </van-field>
+      <van-field
+        name="username"
+        label="test"
+        :required="true"
+      >
+        <template #input>
+          <div>
+            <van-field
+              v-model="username"
+              :placeholder="t('username')"
+              is-link
+              clearable
+            >
+            </van-field>
+          </div>
+        </template>
+      </van-field>
       <van-field
         v-model="username"
         name="username"
         :label="t('username')"
-        :rules="[{ required: true, message: t('requireUsername') }]"
         :placeholder="t('username')"
       />
       <van-field
@@ -48,6 +80,11 @@ export default {
     return {
       username: '',
       password: '',
+      rules: {
+        username: [
+          { required: true, message: 'requireUsername' }
+        ]
+      }
     };
   },
 
