@@ -129,20 +129,6 @@
           @focus="events['focus']"
           @change="events['change']"
         />
-<!--        <van-field-->
-<!--          :id="id"-->
-<!--          :ref="widget.model"-->
-<!--          :disabled="!edit || isDisable"-->
-<!--        >-->
-<!--          <template #input>-->
-<!--            <van-stepper-->
-<!--              v-model="dataModel"-->
-<!--              @blur="events['blur']"-->
-<!--              @focus="events['focus']"-->
-<!--              @change="events['change']"-->
-<!--            />-->
-<!--          </template>-->
-<!--        </van-field>-->
         <span v-if="widget.options.unit" class="fm-unit">{{ widget.options.unit }}</span>
       </div>
     </template>
@@ -261,21 +247,6 @@
     </template>
 
     <template v-if="widget.type =='rate'">
-<!--      <van-field-->
-<!--        :id="id"-->
-<!--        :ref="widget.model"-->
-<!--        :disabled="!edit || isDisable"-->
-<!--      >-->
-<!--        <template #input>-->
-<!--          <van-rate-->
-<!--            v-model="dataModel"-->
-<!--            :max="widget.options.max"-->
-<!--            :allow-half="widget.options.allowHalf"-->
-<!--            :disabled="!edit || isDisable"-->
-<!--            @change="events['change']"-->
-<!--          />-->
-<!--        </template>-->
-<!--      </van-field>-->
       <van-rate
         v-model="dataModel"
         :id="id"
@@ -359,20 +330,6 @@
     </template>
 
     <template v-if="widget.type=='switch'">
-<!--      <van-field-->
-<!--        :id="id"-->
-<!--        :ref="widget.model"-->
-<!--        :disabled="!edit || isDisable"-->
-<!--      >-->
-<!--        <template #input>-->
-<!--          <van-switch-->
-<!--            v-model="dataModel"-->
-<!--            :disabled="!edit || isDisable"-->
-<!--            size="20"-->
-<!--            @change="events['change']"-->
-<!--          />-->
-<!--        </template>-->
-<!--      </van-field>-->
       <van-switch
         v-model="dataModel"
         :id="id"
@@ -384,23 +341,6 @@
     </template>
 
     <template v-if="widget.type=='slider'">
-<!--      <van-field-->
-<!--        :id="id"-->
-<!--        :ref="widget.model"-->
-<!--        :disabled="!edit || isDisable"-->
-<!--      >-->
-<!--        <template #input>-->
-<!--          <van-slider-->
-<!--            v-model="dataModel"-->
-<!--            :min="widget.options.min"-->
-<!--            :max="widget.options.max"-->
-<!--            :step="widget.options.step"-->
-<!--            :range="widget.options.range"-->
-<!--            @change="events['change']"-->
-<!--            @input="events['input']"-->
-<!--          />-->
-<!--        </template>-->
-<!--      </van-field>-->
       <van-slider
         v-model="dataModel"
         :id="id"
@@ -544,16 +484,6 @@
         :ref="widget.model"
         :disabled="!edit || isDisable"
       />
-<!--      <van-field-->
-<!--        :id="id"-->
-<!--        :ref="widget.model"-->
-<!--        v-model="dataModel"-->
-<!--        readonly-->
-<!--      >-->
-<!--        <template #default>-->
-<!--          <span v-html="dataModel" />-->
-<!--        </template>-->
-<!--      </van-field>-->
     </template>
 
     <template v-if="widget.type == 'innerobject'">
@@ -650,7 +580,7 @@ import selectTable from './select2'
 // import FmFormOuterobject from '../FormObject/outerObject'
 
 export default {
-  name: 'GenerateElementItem',
+  name: 'generate-element-item',
   components: {
     FmUpload,
     FmFormTable,
@@ -662,7 +592,7 @@ export default {
     // FmFormOuterobject
   },
   filters: { // 局部过滤器
-    toChies: function(amount) {
+    toChies(amount) {
       const negative = amount.toString().slice(0, 1) === '-'
       const cnNums = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'] // 汉字的数字
       const cnIntRadice = ['', '拾', '佰', '仟'] // 基本单位
@@ -791,10 +721,10 @@ export default {
         if (this.moneyUnit) {
           total *= this.moneyUnit
           return total
-        } else {
+        }
           total *= 1
           return total
-        }
+
       }
     }
   },
@@ -851,11 +781,9 @@ export default {
       if (this.widget.options.required && this.widget.type === 'select') {
         if (this.widget.options.multiple && (this.widget.options.defaultValue.length < 1 || this.dataModel.length < 1)) {
           this.dataModel.push(this.widget.options.options[0].value)
-        } else {
-          if (!this.widget.options.defaultValue && !this.dataModel) {
+        } else if (!this.widget.options.defaultValue && !this.dataModel) {
             this.dataModel = this.widget.options.options[0].value
           }
-        }
       }
       if (this.widget.type === 'select' && this.dataModel) {
         if (Number.isFinite(this.dataModel)) {
@@ -901,7 +829,7 @@ export default {
     }
 
     const events = this.widget.options.events || {}
-    for (var index in this.event_names) {
+    for (const index in this.event_names) {
       const event_name = this.event_names[index]
       const event = events[event_name] || {}
       const args = event.args || []
@@ -959,8 +887,7 @@ export default {
             }
           }
         }
-      } else {
-        if (this.dataModel && !this.dataModel.toString().match(/##(\S*)##/)) {
+      } else if (this.dataModel && !this.dataModel.toString().match(/##(\S*)##/)) {
           this.dataModel = this.dataModel
         } else {
           value = this.widget.options.defaultValue
@@ -970,7 +897,6 @@ export default {
             this.dataModel = value
           }
         }
-      }
     }
     if (this.widget.type === 'select' || this.widget.type === 'radio' || this.widget.type === 'checkbox') {
       if (this.widget.options.remote) {
@@ -1025,7 +951,7 @@ export default {
         let uri = ''
         let page = true
         const page_index = 1
-        const newParams = { text: text, page_index: page_index }
+        const newParams = { text, page_index }
         let page_size = 10
         const text = null
         if (this.widget.options.remoteUri) {
@@ -1050,12 +976,12 @@ export default {
             Object.assign(newParams, uriParams)
           }
         }
-        newParams['page'] = page
-        newParams['page_size'] = page_size
+        newParams.page = page
+        newParams.page_size = page_size
         async function remote_http(uri, newParams) {
           const response = await _that.remote[_that.widget.options.remoteFunc](uri, newParams)
           if (response) {
-            var data = response
+            let data = response
             if (_that.widget.options.remoteData) {
               data = eval(_that.widget.options.remoteData)
               if (_that.widget.options.pagination && _that.widget.options.pageCount) {
@@ -1068,21 +994,21 @@ export default {
                   value: item[_that.widget.options.props.value],
                   label: item[_that.widget.options.props.label]
                 }
-              } else {
+              }
                 // return item
                 if (_that.widget.options.lazy) {
                   return {
                     value: item[_that.widget.options.props.value],
                     label: item[_that.widget.options.props.label]
                   }
-                } else {
+                }
                   return {
                     value: item[_that.widget.options.props.value],
                     label: item[_that.widget.options.props.label],
                     children: _that.processRemoteProps(item[_that.widget.options.props.children], _that.widget.options.props)
                   }
-                }
-              }
+
+
             })
             _that.remoteOptions = _that.widget.options.remoteOptions
             if (_that.widget.options.required && _that.widget.type === 'select') {
@@ -1090,12 +1016,10 @@ export default {
                 _that.showDataModel = []
                 _that.dataModel.push(_that.widget.options.remoteOptions[0].value)
                 _that.showDataModel.push(_that.widget.options.remoteOptions[0].label)
-              } else {
-                if (!_that.widget.options.defaultValue && !_that.dataModel) {
+              } else if (!_that.widget.options.defaultValue && !_that.dataModel) {
                   _that.dataModel = _that.widget.options.remoteOptions[0].value
                   _that.showDataModel = _that.widget.options.remoteOptions[0].label
                 }
-              }
             }
           }
         }
@@ -1161,7 +1085,7 @@ export default {
           params: newParams
         }).then(response => {
           if (response.code === 200) {
-            var data = response
+            let data = response
             if (this.widget.options.remoteData) {
               data = eval(this.widget.options.remoteData)
               setTimeout(() => {
@@ -1188,16 +1112,16 @@ export default {
               label: item[props.label],
               children: this.processRemoteProps(item[props.children], props)
             }
-          } else {
+          }
             return {
               value: item[props.value],
               label: item[props.label]
             }
-          }
+
         })
-      } else {
-        return []
       }
+        return []
+
     },
     onInput(val) {
       // if (this.widget.options.dataType === 'money' && (this.widget.options.conversion === '' || this.widget.options.conversion === '*1')) {
@@ -1236,7 +1160,7 @@ export default {
       }
     },
     getList() {
-      var uri = this.widget.options.remoteUri || ''
+      let uri = this.widget.options.remoteUri || ''
       const newParams = { page: true, page_index: this.widget.options.pageIndex, page_size: this.widget.options.pageSize, text: this.text }
       if (uri) {
         const params = uri.split('?')[1] || ''
@@ -1252,7 +1176,7 @@ export default {
         }
       }
       this.remote[this.widget.options.remoteFunc](uri, newParams).then(response => {
-        var data = response
+        let data = response
         if (data) {
           if (this.widget.options.remoteData) {
             data = eval(this.widget.options.remoteData)
@@ -1393,7 +1317,7 @@ export default {
             params: newParams
           }).then(response => {
             if (response.code === this.$Utils.Constlib.ERROR_CODE_OK) {
-              var data = response
+              let data = response
               if (this.widget.options.remoteData) {
                 data = eval(this.widget.options.remoteData)
                 resolve(data)
@@ -1409,7 +1333,7 @@ export default {
                   _data = element.children
                 }
                 return _data
-              } else if (element.children) {
+              } if (element.children) {
                 getList(element.children)
               }
             })
@@ -1501,8 +1425,7 @@ export default {
             }
           })
         }
-      } else {
-        if (index === 0) {
+      } else if (index === 0) {
           this.remoteOptions = this.widget.options.remoteOptions
         } else {
           const _item = this.checkData[index - 1]
@@ -1512,7 +1435,6 @@ export default {
             }
           })
         }
-      }
     }
   }
 }

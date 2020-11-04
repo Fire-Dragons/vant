@@ -43,12 +43,6 @@ export const basicComponents = [
           tips: 'value: string | number',
           func_body: '',
           func_name: ''
-        },
-        input: {
-          args: ['value'],
-          tips: 'value: string | number',
-          func_body: '',
-          func_name: ''
         }
       },
       conversion: ''
