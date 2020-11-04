@@ -51,18 +51,20 @@ export default createComponent({
     const { checked, loading, disabled } = this;
 
     return (
-      <div
-        class={bem({
-          on: checked,
-          loading,
-          disabled,
-        })}
-        role="switch"
-        style={this.style}
-        aria-checked={String(checked)}
-        onClick={this.onClick}
-      >
-        <div class={bem('node')}>{this.genLoading()}</div>
+      <div>
+        <div
+          class={bem({
+            on: checked,
+            loading,
+            disabled,
+          })}
+          role="switch"
+          style={this.style}
+          aria-checked={String(checked)}
+          onClick={this.onClick}
+        >
+          <div class={bem('node')}>{this.genLoading()}</div>
+        </div>
       </div>
     );
   },

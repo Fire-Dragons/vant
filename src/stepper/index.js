@@ -83,6 +83,7 @@ export default createComponent({
       currentValue: value,
       focused: false,
       oldValue: defaultValue,
+      userInput: null,
     };
   },
 
@@ -139,12 +140,6 @@ export default createComponent({
 
     currentValue(val, oldValue) {
       this.$emit('input', val);
-      if (this.format(val) !== this.format(oldValue)) {
-        this.oldValue = this.format(oldValue);
-      }
-      if (!this.focused) {
-        this.$emit('change', val, this.oldValue);
-      }
     },
   },
 
@@ -196,33 +191,44 @@ export default createComponent({
         event.target.value = formatted;
       }
 
-      this.emitChange(formatted);
-    },
-
-    emitChange(value) {
       if (this.asyncChange) {
         this.$emit('input', value);
-        if (!this.focused) {
-          this.$emit('change', value, this.oldValue);
-        }
+        this.$emit('change', value, this.oldValue);
       } else {
-        this.currentValue = value;
+        this.userInput = formatted
       }
     },
 
-    onChange() {
-      const { type } = this;
+    onChange(event) {
+      if (event) {
+        const {value} = event.target
+        this.setCurrentValue(value);
+      } else {
+        const { type } = this;
 
-      if (this[`${type}Disabled`]) {
-        this.$emit('overlimit', type);
-        return;
+        if (this[`${type}Disabled`]) {
+          this.$emit('overlimit', type);
+          return;
+        }
+
+        const diff = type === 'minus' ? -this.step : +this.step;
+
+        const value = this.format(add(+this.currentValue, diff));
+        this.setCurrentValue(value);
+        this.$emit(type);
       }
+    },
 
-      const diff = type === 'minus' ? -this.step : +this.step;
-
-      const value = this.format(add(+this.currentValue, diff));
-      this.emitChange(value);
-      this.$emit(type);
+    setCurrentValue(newVal) {
+      const oldVal = this.currentValue;
+      newVal = this.format(newVal)
+      if (oldVal === newVal) return;
+      this.$emit('input', newVal);
+      this.$emit('change', newVal, oldVal);
+      if (!this.asyncChange) {
+        this.userInput = null
+        this.currentValue = newVal;
+      }
     },
 
     onFocus(event) {
@@ -325,6 +331,7 @@ export default createComponent({
           onInput={this.onInput}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
+          onChange={this.onChange}
         />
         <button
           vShow={this.showPlus}
