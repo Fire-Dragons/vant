@@ -4,6 +4,7 @@
       :id="id"
       :ref="widget.model"
       v-model="dataModel"
+      :border="false"
       clickable
       readonly
       is-link

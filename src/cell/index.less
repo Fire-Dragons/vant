@@ -4,7 +4,7 @@
 .is-required {
   overflow: visible;
 
-  &::before {
+  &>:first-child::before {
     position: absolute;
     left: @padding-xs;
     color: @cell-required-color;
@@ -15,10 +15,10 @@
 
 .van-cell {
   position: relative;
-  display: flex;
+  //display: flex;
   box-sizing: border-box;
   width: 100%;
-  padding: @cell-vertical-padding @cell-horizontal-padding;
+  //padding: @cell-vertical-padding @cell-horizontal-padding;
   overflow: hidden;
   color: @cell-text-color;
   font-size: @cell-font-size;
@@ -27,6 +27,14 @@
 
   &::after {
     .hairline-bottom(@cell-border-color, @padding-md, @padding-md);
+  }
+
+  &__inner {
+    display: flex;
+    padding: @cell-vertical-padding @cell-horizontal-padding;
+    &--input {
+      padding: 0
+    }
   }
 
   &:last-child::after,
@@ -39,6 +47,13 @@
     color: @cell-label-color;
     font-size: @cell-label-font-size;
     line-height: @cell-label-line-height;
+  }
+
+  &__tip {
+    color: @cell-label-color;
+    font-size: @cell-label-font-size;
+    line-height: @cell-label-line-height;
+    margin-left: @cell-horizontal-padding + 1px;
   }
 
   &__title,

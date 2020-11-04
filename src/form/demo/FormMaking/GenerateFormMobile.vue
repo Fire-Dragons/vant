@@ -1,5 +1,5 @@
 <template>
-  <div :style="{width: data.config.width}" class="fm-form">
+  <van-cell-group :style="{width: data.config.width}" class="fm-form">
     <van-form
       ref="generateForm"
       :key="formKey"
@@ -94,7 +94,7 @@
         </generate-form-item>
       </template>
     </van-form>
-  </div>
+  </van-cell-group>
 </template>
 
 <script>

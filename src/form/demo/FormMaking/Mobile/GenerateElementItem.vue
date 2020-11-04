@@ -40,6 +40,7 @@
           :show-password="widget.options.showPassword"
           :style="{width: isTable ? '100%' : widget.options.width}"
           :class="textPosition"
+          :border="false"
           type="number"
           @blur="events['blur']"
           @focus="events['focus']"
@@ -62,6 +63,7 @@
           :show-password="widget.options.showPassword"
           :style="{width: isTable ? '100%' : widget.options.width}"
           :class="textPosition"
+          :border="false"
           type="number"
           @blur="events['blur']"
           @focus="events['focus']"
@@ -71,10 +73,10 @@
           <template v-if="fieldUnit" slot="extra">
             <span style="color: #969696;">{{ fieldUnit }}</span>
           </template>
+          <template v-if="dataLabel && widget.options.uppercase" slot="tip">
+            {{ Capitalization | toChies }}
+          </template>
         </van-field>
-        <div v-if="dataLabel && widget.options.uppercase" class="tips">
-          {{ Capitalization | toChies }}
-        </div>
       </template>
 
       <van-field
@@ -83,6 +85,7 @@
         :ref="widget.model"
         v-model="dataModel"
         :type="widget.options.dataType"
+        :border="false"
         :disabled="!edit || isDisable"
         :placeholder="widget.options.placeholder ? widget.options.placeholder : '请输入'"
         :style="{width: isTable ? '100%' : widget.options.width}"
@@ -107,6 +110,7 @@
         :placeholder="widget.options.placeholder ? widget.options.placeholder : '请输入'"
         :style="{width: isTable ? '100%' : widget.options.width}"
         autosize
+        :border="false"
         type="textarea"
         @blur="events['blur']"
         @focus="events['focus']"
@@ -151,6 +155,7 @@
         :style="{width: isTable ? '100%' : widget.options.width}"
         :disabled="!edit || isDisable"
         clickable
+        :border="false"
         readonly
         is-link
         placeholder="请选择"
@@ -180,6 +185,7 @@
         :disabled="!edit || isDisable"
         clickable
         readonly
+        :border="false"
         is-link
         placeholder="请选择"
         @click="showPicker = true"
@@ -214,6 +220,7 @@
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
+        :border="false"
         :placeholder="widget.options.placeholder ? widget.options.placeholder : '请选择'"
         :disabled="!edit || isDisable"
         clickable
@@ -234,6 +241,7 @@
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
+        :border="false"
         :placeholder="widget.options.placeholder ? widget.options.placeholder : '请选择'"
         :disabled="!edit || isDisable"
         clickable
@@ -295,6 +303,7 @@
         :id="id"
         :ref="widget.model"
         v-model="showDataModel"
+        :border="false"
         :placeholder="widget.options.placeholder ? widget.options.placeholder : '请选择'"
         :disabled="!edit || isDisable"
         clickable
@@ -478,6 +487,7 @@
         :placeholder="widget.options.placeholder ? widget.options.placeholder : '请选择'"
         clickable
         readonly
+        :border="false"
         is-link
         @click="showPicker = true"
       />
@@ -521,6 +531,7 @@
         :id="id"
         :ref="widget.model"
         v-model="dataModel"
+        :border="false"
         readonly
       />
       <!-- <span :id="id" :ref="widget.model">{{ dataModel }}</span> -->

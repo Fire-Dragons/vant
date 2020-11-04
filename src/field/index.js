@@ -491,8 +491,7 @@ export default createComponent({
       if (inputSlot) {
         return (
           <div
-            // class={bem('control', [inputAlign, 'custom'])}
-            class={bem('control', [inputAlign])}
+            class={bem('control', [inputAlign, 'custom'])}
             onClick={this.onClickInput}
           >
             {inputSlot}
@@ -621,6 +620,16 @@ export default createComponent({
         return <span>{this.label + colon}</span>;
       }
     },
+    genTip() {
+
+      if (this.slots('tip')) {
+        return this.slots('tip');
+      }
+
+      if (this.tip) {
+        return <span>{this.tip}</span>;
+      }
+    },
   },
 
   render() {
@@ -638,9 +647,9 @@ export default createComponent({
     if (extra) {
       scopedSlots.extra = () => extra;
     }
-    const CellLabel = this.slots('CellLabel')
-    if (CellLabel) {
-      scopedSlots.label = () => CellLabel;
+    const tip = this.genTip();
+    if (tip) {
+      scopedSlots.tip = () => tip;
     }
     return (
       <Cell
@@ -653,6 +662,7 @@ export default createComponent({
         clickable={this.clickable}
         titleStyle={this.labelStyle}
         valueClass={bem('value')}
+        tipClass={this.tipClass}
         titleClass={[bem('label', labelAlign), this.labelClass]}
         scopedSlots={scopedSlots}
         arrowDirection={this.arrowDirection}

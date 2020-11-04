@@ -11,8 +11,6 @@
         'no-label-form-item': widget.options.isLabelWidth && widget.options.labelWidth == 0
       }"
       :required="widget.options.required"
-      @click-left-icon="clickLeftIcon"
-      :left-icon="widget.options.fieldTips ? 'question-o' : ''"
     >
       <template #input>
         <generate-element-item
@@ -35,11 +33,11 @@
           </template>
         </generate-element-item>
       </template>
-<!--      <template #CellLabel>-->
-<!--        <div class="tips" :style="{color: widget.options.textColor}">-->
-<!--          {{ widget.options.fieldTips }}-->
-<!--        </div>-->
-<!--      </template>-->
+      <template #tip v-if="widget.options.fieldTips">
+        <span>
+          {{ widget.options.fieldTips }}
+        </span>
+      </template>
     </van-field>
     <van-divider
       v-if="widget.type == 'divider' && show"
@@ -53,8 +51,6 @@
 <script>
 import GenerateElementItem from './GenerateElementItem'
 import Vue from 'vue'
-import Dialog from '@/dialog';
-import Notify from '@/notify';
 
 export default {
   components: {
@@ -103,16 +99,7 @@ export default {
   },
   destroyed() {
   },
-  // created() {
-  //   console.log('66', this.models)
-  // },
   methods: {
-    clickLeftIcon(e) {
-      Dialog.alert({
-        title: '提示',
-        message: this.widget.options.fieldTips
-      })
-    },
   }
 }
 </script>
