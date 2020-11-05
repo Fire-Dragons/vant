@@ -593,9 +593,8 @@ export default createComponent({
       if (message) {
         const errorMessageAlign = this.getProp('errorMessageAlign');
 
-        return (
-          <div class={bem('error-message', errorMessageAlign)}>{message}</div>
-        );
+        return <div class={bem('error-message', errorMessageAlign)}>{message}</div>
+
       }
     },
 
