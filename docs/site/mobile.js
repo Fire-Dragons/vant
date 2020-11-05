@@ -4,10 +4,23 @@ import Lazyload from '../../src/lazyload';
 import { get } from '../../src/utils';
 import { camelize } from '../../src/utils/format/string';
 import enUS from '../../src/locale/lang/en-US';
+import utils from '../../src/form/demo/js'
+import apis from '../../src/form/demo/api'
+// 注册公共组件
+import '../../src/form/demo'
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
+
+Vue.prototype.$Utils = utils
+Vue.prototype.$Apis = apis
 
 Vue.use(Lazyload, {
   lazyComponent: true,
 });
+
+
+// name is optional
+Vue.use(VueLodash, { name: 'custom' , lodash })
 
 Locale.add({
   'en-US': enUS,
