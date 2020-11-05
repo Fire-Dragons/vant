@@ -83,7 +83,7 @@ export default createComponent({
       this.showPicker = true
     },
 
-    genLabel(item) {
+    genTitle(item) {
       let { label } = item
       if (!this.showLabel && item.value) {
         label = item.value
@@ -91,7 +91,7 @@ export default createComponent({
       return (<span>{label}</span>)
     },
 
-    genIcon(item) {
+    genRightIcon(item) {
       const color = "#ff5514"
       const size = "16"
       const name = "success"
@@ -106,8 +106,8 @@ export default createComponent({
           <Cell
             style={style}
             scopedSlots={{
-              'title': () => this.genLabel(item),
-              'right-icon': () => this.genIcon(item),
+              'title': () => this.genTitle(item),
+              'right-icon': () => this.genRightIcon(item),
             }}
             onClick={() => {
               this.handleCheck(item, columnIndex)

@@ -3,13 +3,14 @@
     <van-form @submit="onSubmit" @failed="onFailed" :rules="rules">
       <van-cell>
         <van-field
-          label="test"
+          label="测试单选框"
           name="radio"
           :required="true"
         >
           <template #input>
             <van-cell-radio
               v-model="radio"
+              ref="radio"
               placeholder="测试选择"
               :options="options"
               is-link
@@ -53,6 +54,9 @@
     components: {
     },
 
+    mounted() {
+    },
+
     data() {
       return {
         readonly: true,
@@ -87,7 +91,7 @@
         ]
       }
     },
-    
+
     methods: {
       click(event) {
         console.info('click', event)
