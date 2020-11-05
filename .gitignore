@@ -3,6 +3,11 @@
 .DS_Store
 .idea
 .vscode
+src/form/demo/FormMaking
+src/form/demo/install.js
+src/form/demo/index.js
+src/form/demo/api
+src/form/demo/js
 
 # npm
 node_modules
