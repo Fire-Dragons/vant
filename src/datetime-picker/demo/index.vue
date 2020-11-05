@@ -39,7 +39,6 @@
         :title="t('timeType')"
         :min-hour="10"
         :max-hour="20"
-        formate="HH:mm"
       />
     </demo-block>
 
@@ -69,7 +68,6 @@
         type="time"
         :title="t('optionFilter')"
         :filter="filter"
-        formate="HH:mm"
       />
     </demo-block>
 

@@ -26,18 +26,6 @@ export default createComponent({
       type: [Number, String],
       default: 59,
     },
-    minSecond: {
-      type: [Number, String],
-      default: 0,
-    },
-    maxSecond: {
-      type: [Number, String],
-      default: 59,
-    },
-    formate: {
-      type: String,
-      default: 'HH:mm:ss'
-    }
   },
 
   computed: {
@@ -51,10 +39,6 @@ export default createComponent({
           type: 'minute',
           range: [+this.minMinute, +this.maxMinute],
         },
-        {
-          type: 'second',
-          range: [+this.minSecond, +this.maxSecond]
-        }
       ];
     },
   },
@@ -65,8 +49,6 @@ export default createComponent({
     maxHour: 'updateInnerValue',
     minMinute: 'updateInnerValue',
     maxMinute: 'updateInnerValue',
-    minSecond: 'updateInnerValue',
-    maxSecond: 'updateInnerValue',
 
     value(val) {
       val = this.formatValue(val);
@@ -80,55 +62,25 @@ export default createComponent({
 
   methods: {
     formatValue(value) {
-      let _result = '';
-      if (this.formate === 'HH:mm') {
-        if (!value) {
-          value = `${padZero(this.minHour)}:${padZero(this.minMinute)}`;
-        }
-  
-        let [hour, minute] = value.split(':');
-        hour = padZero(range(hour, this.minHour, this.maxHour));
-        minute = padZero(range(minute, this.minMinute, this.maxMinute));
-  
-        _result = `${hour}:${minute}`;
-        // return `${hour}:${minute}`;
-      } else if (this.formate === 'HH:mm:ss') {
-        if (!value) {
-          value = `${padZero(this.minHour)}:${padZero(this.minMinute)}:${padZero(this.minSecond)}`;
-        }
-        let [hour, minute, second] = value.split(':')
-        hour = padZero(range(hour, this.minHour, this.maxHour));
-        minute = padZero(range(minute, this.minMinute, this.maxMinute));
-        second = padZero(range(second, this.minSecond, this.maxSecond));
-        _result = `${hour}:${minute}:${second}`;
-      } else {
-        if (!value) {
-          value = `${padZero(this.minMinute)}:${padZero(this.minSecond)}`;
-        }
-        let [minute, second] = value.split(':')
-        minute = padZero(range(minute, this.minMinute, this.maxMinute));
-        second = padZero(range(second, this.minSecond, this.maxSecond));
-        _result = `${minute}:${second}`;
+      if (!value) {
+        value = `${padZero(this.minHour)}:${padZero(this.minMinute)}`;
       }
-      
-      return _result
+
+      let [hour, minute] = value.split(':');
+      hour = padZero(range(hour, this.minHour, this.maxHour));
+      minute = padZero(range(minute, this.minMinute, this.maxMinute));
+
+      return `${hour}:${minute}`;
     },
 
     updateInnerValue() {
-      const [hourIndex, minuteIndex, secondIndex] = this.getPicker().getIndexes();
-      const [hourColumn, minuteColumn, secondColumn] = this.originColumns;
+      const [hourIndex, minuteIndex] = this.getPicker().getIndexes();
+      const [hourColumn, minuteColumn] = this.originColumns;
 
       const hour = hourColumn.values[hourIndex] || hourColumn.values[0];
       const minute = minuteColumn.values[minuteIndex] || minuteColumn.values[0];
-      const second = secondColumn.values[secondIndex] || secondColumn.values[0];
 
-      if (this.formate === 'HH:mm') {
-        this.innerValue = this.formatValue(`${hour}:${minute}`);
-      } else if (this.formate === 'HH:mm:ss') {
-        this.innerValue = this.formatValue(`${hour}:${minute}:${second}`);
-      } else {
-        this.innerValue = this.formatValue(`${minute}:${second}`);
-      }
+      this.innerValue = this.formatValue(`${hour}:${minute}`);
       this.updateColumnValue();
     },
 
@@ -145,7 +97,7 @@ export default createComponent({
     updateColumnValue() {
       const { formatter } = this;
       const pair = this.innerValue.split(':');
-      const values = [formatter('hour', pair[0]), formatter('minute', pair[1]), formatter('second', pair[2])];
+      const values = [formatter('hour', pair[0]), formatter('minute', pair[1])];
 
       this.$nextTick(() => {
         this.getPicker().setValues(values);

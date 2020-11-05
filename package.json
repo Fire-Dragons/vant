@@ -56,19 +56,7 @@
     "@babel/runtime": "7.x",
     "@vant/icons": "1.4.0",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
-    "axios": "^0.21.0",
-    "file-saver": "^2.0.2",
-    "js-base64": "^3.5.2",
-    "js-file-download": "^0.4.12",
-    "jszip": "^3.5.0",
-    "lodash": "^4.17.20",
-    "qiniu-js": "^3.1.1",
-    "qs": "^6.9.4",
-    "viewerjs": "^1.7.1",
-    "vue-lazyload": "^1.2.3",
-    "vue-lodash": "^2.1.2",
-    "vue2-editor": "^2.10.2",
-    "vuedraggable": "^2.24.3"
+    "vue-lazyload": "1.2.3"
   },
   "peerDependencies": {
     "vue": ">= 2.5.22"

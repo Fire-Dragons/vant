@@ -1,10 +1,11 @@
 <template>
   <demo-block :title="t('basicUsage')">
-    <van-form @submit="onSubmit" @failed="onFailed" :rules="rules">
+    <van-form @submit="onSubmit" @failed="onFailed">
       <van-field
         v-model="username"
         name="username"
         :label="t('username')"
+        :rules="[{ required: true, message: t('requireUsername') }]"
         :placeholder="t('username')"
       />
       <van-field
@@ -47,11 +48,6 @@ export default {
     return {
       username: '',
       password: '',
-      rules: {
-        username: [
-          { required: true, message: 'requireUsername' }
-        ]
-      }
     };
   },
 

@@ -32,8 +32,6 @@ export default createComponent({
     filter: 'updateInnerValue',
     minDate: 'updateInnerValue',
     maxDate: 'updateInnerValue',
-    minSecond: 'updateInnerValue',
-    maxSecond: 'updateInnerValue',
 
     value(val) {
       val = this.formatValue(val);
@@ -52,7 +50,6 @@ export default createComponent({
         maxMonth,
         maxHour,
         maxMinute,
-        maxSecond,
       } = this.getBoundary('max', this.innerValue);
 
       const {
@@ -61,7 +58,6 @@ export default createComponent({
         minMonth,
         minHour,
         minMinute,
-        minSecond,
       } = this.getBoundary('min', this.innerValue);
 
       let result = [
@@ -84,10 +80,6 @@ export default createComponent({
         {
           type: 'minute',
           range: [minMinute, maxMinute],
-        },
-        {
-          type: 'second',
-          range: [minSecond, maxSecond],
         },
       ];
 
@@ -138,14 +130,12 @@ export default createComponent({
       let date = 1;
       let hour = 0;
       let minute = 0;
-      let second = 0;
 
       if (type === 'max') {
         month = 12;
         date = getMonthEndDay(value.getFullYear(), value.getMonth() + 1);
         hour = 23;
         minute = 59;
-        second = 59;
       }
 
       if (value.getFullYear() === year) {
@@ -156,9 +146,6 @@ export default createComponent({
             hour = boundary.getHours();
             if (value.getHours() === hour) {
               minute = boundary.getMinutes();
-              if (value.getSeconds() === second) {
-                second = boundary.getSeconds();
-              }
             }
           }
         }
@@ -170,7 +157,6 @@ export default createComponent({
         [`${type}Date`]: date,
         [`${type}Hour`]: hour,
         [`${type}Minute`]: minute,
-        [`${type}Second`]: second,
       };
     },
 
@@ -206,7 +192,6 @@ export default createComponent({
 
       let hour = 0;
       let minute = 0;
-      let second = 0;
 
       if (type === 'datehour') {
         hour = getValue('hour');
@@ -215,10 +200,9 @@ export default createComponent({
       if (type === 'datetime') {
         hour = getValue('hour');
         minute = getValue('minute');
-        second = getValue('second')
       }
 
-      const value = new Date(year, month - 1, day, hour, minute, second);
+      const value = new Date(year, month - 1, day, hour, minute);
 
       this.innerValue = this.formatValue(value);
     },
@@ -249,8 +233,6 @@ export default createComponent({
             return formatter('hour', padZero(value.getHours()));
           case 'minute':
             return formatter('minute', padZero(value.getMinutes()));
-          case 'second':
-            return formatter('second', padZero(value.getSeconds()))
           default:
             // no default
             return null;

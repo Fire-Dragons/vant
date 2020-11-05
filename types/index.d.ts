@@ -9,7 +9,6 @@ import { CheckboxGroup } from './checkbox-group';
 import { CollapseItem } from './collapse-item';
 import { CountDown } from './count-down';
 import { DatetimePicker } from './datetime-picker';
-import { DatePicker } from './date-picker';
 import { Dialog } from './dialog';
 import { DropdownItem } from './dropdown-item';
 import { Field } from './field';
@@ -101,7 +100,6 @@ export {
   CollapseItem,
   CountDown,
   DatetimePicker,
-  DatePicker,
   Dialog,
   DropdownItem,
   Form,
