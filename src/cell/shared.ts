@@ -11,9 +11,11 @@ export type SharedCellProps = {
   titleClass?: any;
   valueClass?: any;
   labelClass?: any;
+  tipClass?: any;
   title?: string | number;
   value?: string | number;
   label?: string | number;
+  tip?: string | number;
   arrowDirection?: 'up' | 'down' | 'left' | 'right';
 };
 
@@ -29,9 +31,11 @@ export const cellProps = {
   titleClass: null as any,
   valueClass: null as any,
   labelClass: null as any,
+  tipClass: null as any,
   title: [Number, String],
   value: [Number, String],
   label: [Number, String],
+  tip: [Number, String],
   arrowDirection: String,
   border: {
     type: Boolean,

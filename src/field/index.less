@@ -78,6 +78,18 @@
       display: flex;
       align-items: center;
       min-height: @cell-line-height;
+
+      & > div {
+        -webkit-flex: 1 1 auto;
+        flex: 1 1 auto;
+
+        width: 30px; /* 让过渡表现良好。（从/到"width:auto"的过渡
+                      至少在 Gecko 和 Webkit 上是有 bug 的。
+                      更多信息参见 http://bugzil.la/731886 ） */
+
+        -webkit-transition: width 0.7s ease-out;
+        transition: width 0.7s ease-out;
+      }
     }
 
     // for ios wechat

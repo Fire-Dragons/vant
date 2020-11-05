@@ -19,6 +19,7 @@ export type CellSlots = DefaultSlots & {
   title?: ScopedSlot;
   label?: ScopedSlot;
   extra?: ScopedSlot;
+  tip?: ScopedSlot;
   'right-icon'?: ScopedSlot;
 };
 
@@ -34,7 +35,7 @@ function Cell(
   slots: CellSlots,
   ctx: RenderContext<CellProps>
 ) {
-  const { icon, size, title, label, value, isLink } = props;
+  const { icon, size, title, label, value, isLink, tip } = props;
   const showTitle = slots.title || isDef(title);
 
   function Label() {
@@ -88,6 +89,18 @@ function Cell(
     }
   }
 
+  function Tip() {
+    const showTip = slots.tip || isDef(tip)
+
+    if (showTip) {
+      return (
+        <div class={[bem('tip'), props.tipClass]}>
+          {slots.tip ? slots.tip() : tip}
+        </div>
+      );
+    }
+  }
+
   function RightIcon() {
     const rightIconSlot = slots['right-icon'];
 
@@ -117,27 +130,34 @@ function Cell(
   const classes: Mods = {
     clickable,
     center: props.center,
-    required: props.required,
     borderless: !props.border,
+    required: props.required,
   };
+  const innerClass: Mods = {
+  }
 
   if (size) {
     classes[size] = size;
   }
-
+  innerClass.input = !showTitle
   return (
     <div
-      class={bem(classes)}
-      role={clickable ? 'button' : null}
-      tabindex={clickable ? 0 : null}
-      onClick={onClick}
-      {...inherit(ctx)}
+      class={[bem(classes)]}
     >
-      {LeftIcon()}
-      {Title()}
-      {Value()}
-      {RightIcon()}
-      {slots.extra?.()}
+      <div
+        class={[bem('inner', innerClass)]}
+        role={clickable ? 'button' : null}
+        tabindex={clickable ? 0 : null}
+        onclick={onClick}
+        {...inherit(ctx)}
+      >
+        {LeftIcon()}
+        {Title()}
+        {Value()}
+        {RightIcon()}
+        {slots.extra?.()}
+      </div>
+      {Tip()}
     </div>
   );
 }
