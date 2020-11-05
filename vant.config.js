@@ -377,6 +377,14 @@ module.exports = {
                 path: 'sku',
                 title: 'Sku 商品规格',
               },
+              {
+                path: 'cell-radio',
+                title: '单元格单选框组',
+              },
+              {
+                path: 'cell-checkbox',
+                title: '单元格复选框组',
+              },
             ],
           },
           {
