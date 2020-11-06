@@ -46,7 +46,7 @@ export default createComponent({
       type: String,
       default: '请选择'
     },
-    options: {
+    columns: {
       type: Array,
       default: () => { return [] }
     },
@@ -146,7 +146,7 @@ export default createComponent({
     },
 
     genCell() {
-      return this.options.map((item, columnIndex) => (
+      return this.columns.map((item, columnIndex) => (
           <Cell
             title={item.label}
             name={item}
