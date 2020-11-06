@@ -385,6 +385,10 @@ module.exports = {
                 path: 'cell-checkbox',
                 title: '单元格复选框组',
               },
+              {
+                path: 'cell-select',
+                title: '单元格下拉框',
+              },
             ],
           },
           {
