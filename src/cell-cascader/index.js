@@ -111,13 +111,50 @@ export default createComponent({
         this.options = val
       }
     },
-  },
-
-  created() {
-
+    options: {
+      depp: true,
+      handler(val) {
+        this.initSelectDatas(this.value)
+      }
+    }
   },
 
   methods: {
+    getItem(val, options) {
+      let option = {}
+      if (Array.isArray(options)) {
+        options.forEach(element => {
+          if (element[this.valueKey] === val) {
+            option = element
+            return
+          }
+        })
+      }
+      return option
+    },
+    initSelectDatas(val) {
+      if (this.selectDatas.length !== 0) {
+        return
+      }
+      if (Array.isArray(val)) {
+        val.forEach(element => {
+          const item = this.  getItem(element, this.options)
+          if (item[this.labelKey] && item[this.valueKey]) {
+            const value = {}
+            value[this.labelKey] = item[this.labelKey]
+            value[this.valueKey] = item[this.valueKey]
+            this.lastSelectValue = val
+            this.selectDatas.push(value)
+            this.getDatas(item, false)
+          }
+        })
+        const _data = this.selectDatas.map(item => {
+          return item[this.labelKey]
+        })
+        this.showValue = _data.join('/')
+        this.options = this.columns
+      }
+    },
     getDatas(node, levelNotChange) {
       this.loading = true
       const resolve = dataList => {
@@ -156,7 +193,11 @@ export default createComponent({
         const value = {}
         value[this.labelKey] = item[this.labelKey]
         value[this.valueKey] = item[this.valueKey]
-        this.selectDatas.push(value)
+        if (this.level === 1) {
+          this.selectDatas = [value]
+        }else {
+          this.selectDatas.push(value)
+        }
       } else {
         this.selectDatas[this.selectDatas.length - 1][this.labelKey] = item[this.labelKey]
         this.selectDatas[this.selectDatas.length - 1][this.valueKey] = item[this.valueKey]
@@ -209,8 +250,8 @@ export default createComponent({
 
     CancelClick() {
       this.showPicker = false
-      this.selectDatas = []
-      this.lastSelectValue = null
+      // this.selectDatas = []
+      // this.lastSelectValue = null
       this.level = 1
       this.options = []
     },
