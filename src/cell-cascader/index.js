@@ -114,8 +114,7 @@ export default createComponent({
   },
 
   created() {
-    console.info('create', this.columns)
-    console.info('create', this.options)
+
   },
 
   methods: {
@@ -186,8 +185,6 @@ export default createComponent({
 
     onClick(event) {
       this.$emit('click', event)
-      console.info(this.level)
-      console.info(this.backend)
       if (this.level in this.backend) {
         this.options = this.backend[this.level]
       }
