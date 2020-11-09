@@ -85,8 +85,8 @@ export default createComponent({
       lastSelectValue: null,
       options: [],
       level: 1,
-      backend: {},
-      showOverlay: false
+      cache: {},
+      loading: false
     };
   },
 
@@ -119,26 +119,26 @@ export default createComponent({
 
   methods: {
     getDatas(node, levelNotChange) {
-      this.showOverlay = true
+      this.loading = true
       const resolve = dataList => {
-        this.backend[this.level] = this.options
+        this.cache[this.level] = this.options
         if (dataList && Array.isArray(dataList) && dataList.length > 0) {
           this.options = dataList
           if (!levelNotChange) {
             this.level += 1
           }
         }
-        this.showOverlay = false
+        this.loading = false
       };
       let { level } = this
       if (!levelNotChange) {
         level += 1
       }
-      if (level in this.backend) {
-        const dataList = this.backend[level]
-        Object.keys(this.backend).forEach(element => {
+      if (level in this.cache) {
+        const dataList = this.cache[level]
+        Object.keys(this.cache).forEach(element => {
           if (element > this.level) {
-            delete this.backend[element]
+            delete this.cache[element]
           }
         })
         resolve(dataList)
@@ -185,8 +185,8 @@ export default createComponent({
 
     onClick(event) {
       this.$emit('click', event)
-      if (this.level in this.backend) {
-        this.options = this.backend[this.level]
+      if (this.level in this.cache) {
+        this.options = this.cache[this.level]
       }
       this.showPicker = true
     },
@@ -216,7 +216,7 @@ export default createComponent({
     },
 
     genLoading() {
-      if (this.showOverlay) {
+      if (this.loading) {
         const color = "#1989fa"
         return (
           <div class="cell-overlay">
