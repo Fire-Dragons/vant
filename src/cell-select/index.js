@@ -30,7 +30,11 @@ export default createComponent({
     },
     disabled: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     },
     clickable: {
       type: Boolean,
@@ -83,7 +87,6 @@ export default createComponent({
 
   data() {
     return {
-      readonly: true,
       showPicker: false,
       showValue: null,
       mutilSelect: [],
@@ -117,6 +120,9 @@ export default createComponent({
     },
 
     onClick(event) {
+      if (this.disabled || this.readonly) {
+        return
+      }
       this.$emit('click', event)
       this.showPicker = true
     },
