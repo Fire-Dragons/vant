@@ -128,12 +128,13 @@ export default createComponent({
     getItem(val, options) {
       let option = {}
       if (Array.isArray(options)) {
-        options.forEach(element => {
+        for (var i=0; i < options.length; i++) {
+          const element = options[i]
           if (element[this.valueKey] === val) {
             option = element
-            return
+            break
           }
-        })
+        }
       }
       return option
     },

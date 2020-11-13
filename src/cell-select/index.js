@@ -113,20 +113,26 @@ export default createComponent({
       handler(val) {
         const showValues = []
         if (this.multiple) {
-          val.forEach((item, index)=>{
-            if (item.value === this.newValue) {
+          const count = this.newValue.length
+          let valueCount = 1
+          for (var i=0; i < val.length; i++) {
+            const item = val[i]
+            if (this.newValue.include(item.value)) {
               showValues.push(item.label || item.value)
-              this.$refs.selectMutil[index].toggle(true)
+              valueCount += 1
+              if (valueCount >= count) {
+                break
+              }
             }
-          })
+          }
         } else {
-          val.forEach((item, index)=>{
+          for (var i=0; i < val.length; i++) {
+            const item = val[i]
             if (item.value === this.newValue) {
-              this.showValue = item.label
               showValues.push(item.label || item.value)
-              return
+              break
             }
-          })
+          }
         }
         this.showValue = showValues.join()
       }
