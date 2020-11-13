@@ -76,20 +76,21 @@ export default createComponent({
     emitPath: {
       type: Boolean,
       default: true
-    }
+    },
+    value: [String, Number, Array]
   },
 
   data() {
     return {
       showPicker: false,
-      value: null,
       showValue: null,
       selectDatas: [],
       lastSelectValue: null,
       options: [],
       level: 1,
       cache: {},
-      loading: false
+      loading: false,
+      newValue: this.value
     };
   },
 
@@ -106,7 +107,8 @@ export default createComponent({
   },
 
   watch: {
-    value(val, oldValue) {
+    newValue(val, oldValue) {
+      this.$emit('input', val)
     },
     columns: {
       deep: true,
@@ -136,7 +138,11 @@ export default createComponent({
       return option
     },
     initSelectDatas(val) {
-      if (this.selectDatas.length !== 0) {
+      if (this.selectDatas.length !== 0 && !this.showValue) {
+        this.showValue = this.selectDatas.join('/')
+        return
+      }
+      if (this.showValue) {
         return
       }
       if (Array.isArray(val)) {
@@ -154,8 +160,16 @@ export default createComponent({
         const _data = this.selectDatas.map(item => {
           return item[this.labelKey]
         })
-        this.showValue = _data.join('/')
+        if (_data) {
+          this.showValue = _data.join('/')
+        } else if (Array.isArray(this.newValue)) {
+          this.showValue = this.newValue.join('/')
+        } else {
+          this.showValue = this.newValue
+        }
         this.options = this.columns
+      } else {
+        this.showValue = this.newValue
       }
     },
     getDatas(node, levelNotChange) {
@@ -247,9 +261,9 @@ export default createComponent({
       })
       this.showValue = _data.join('/')
       if (this.emitPath) { // 保存值为数组时
-        this.value = _model
+        this.newValue = _model
       } else {
-        this.value = _model[_model.length - 1]
+        this.newValue = _model[_model.length - 1]
       }
       this.CancelClick()
     },

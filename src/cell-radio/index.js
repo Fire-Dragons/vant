@@ -54,19 +54,20 @@ export default createComponent({
       default: () => { return [] }
     },
     rules: Array,
-    safeAreaInsetBottom: Boolean
+    safeAreaInsetBottom: Boolean,
+    value: [String, Number, Array]
   },
 
   data() {
     return {
       showPicker: false,
-      value: null,
-      showValue: null
+      showValue: null,
+      newValue: this.value
     };
   },
 
   watch: {
-    value(val, oldValue) {
+    newValue(val, oldValue) {
       this.$emit('input', val)
       if (val !== oldValue) {
         this.$emit('change', val)
@@ -76,7 +77,7 @@ export default createComponent({
 
   methods: {
     handleCheck(item, index) {
-      this.value = item.value
+      this.newValue = item.value
       this.showValue = item.label
       this.showPicker = false
     },
@@ -101,7 +102,8 @@ export default createComponent({
       const color = "#ff5514"
       const size = "16"
       const name = "success"
-      if (this.value === item.value) {
+      if (this.newValue === item.value) {
+        this.showValue = item.label || item.value
         return (<Icon name={name} color={color} size={size} />)
       }
     },

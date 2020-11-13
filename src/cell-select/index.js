@@ -82,7 +82,8 @@ export default createComponent({
     loading: {
       type: Boolean,
       default: false
-    }
+    },
+    value: [String, Number, Array]
   },
 
   data() {
@@ -90,13 +91,13 @@ export default createComponent({
       showPicker: false,
       showValue: null,
       mutilSelect: [],
-      value: null,
-      selectVal: this.value
+      selectVal: this.value,
+      newValue: this.value
     };
   },
 
   watch: {
-    value(val, oldValue) {
+    newValue(val, oldValue) {
       if (!this.multiple) {
         this.selectVal = val
       }
@@ -107,6 +108,29 @@ export default createComponent({
         this.$emit('change', val)
       }
     },
+    columns: {
+      deep: true,
+      handler(val) {
+        const showValues = []
+        if (this.multiple) {
+          val.forEach((item, index)=>{
+            if (item.value === this.newValue) {
+              showValues.push(item.label || item.value)
+              this.$refs.selectMutil[index].toggle(true)
+            }
+          })
+        } else {
+          val.forEach((item, index)=>{
+            if (item.value === this.newValue) {
+              this.showValue = item.label
+              showValues.push(item.label || item.value)
+              return
+            }
+          })
+        }
+        this.showValue = showValues.join()
+      }
+    }
   },
 
   methods: {
@@ -132,12 +156,12 @@ export default createComponent({
       const values = []
       this.mutilSelect.forEach(item => {
         values.push(item.value)
-        showValues.push(item.label)
+        showValues.push(item.label || item.value)
       })
       if (!this.multiple) {
-        this.value = values.join()
+        this.newValue = values.join()
       } else {
-        this.value = values
+        this.newValue = values
       }
       this.showValue = showValues.join()
       this.showPicker = false

@@ -56,6 +56,7 @@ export default createComponent({
     },
     rules: Array,
     safeAreaInsetBottom: Boolean,
+    value: [String, Number, Array]
   },
 
   data() {
@@ -63,15 +64,28 @@ export default createComponent({
       showPicker: false,
       showValue: null,
       mutilSelect: [],
-      value: []
+      newValue: this.value
     };
   },
 
   watch: {
-    value(val) {
+    newValue(val) {
       this.$emit('input', val)
       this.$emit('change', val)
     },
+    columns: {
+      deep: true,
+      handler(val) {
+        const showValues = []
+        val.forEach((item, index)=>{
+          if (item.value === this.newValue) {
+            showValues.push(item.label || item.value)
+            this.$refs.selectMutil[index].toggle(true)
+          }
+        })
+        this.showValue = showValues.join()
+      }
+    }
   },
 
   methods: {
@@ -94,7 +108,7 @@ export default createComponent({
         values.push(item.value)
         showValues.push(item.label)
       })
-      this.value = values
+      this.newValue = values
       this.showValue = showValues.join()
       this.showPicker = false
     },
