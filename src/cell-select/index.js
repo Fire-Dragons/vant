@@ -96,6 +96,17 @@ export default createComponent({
     };
   },
 
+  computed: {
+    initData() {
+      const { value, columns, showValue } = this
+      return {
+        value,
+        columns,
+        showValue
+      }
+    }
+  },
+
   watch: {
     newValue(val, oldValue) {
       if (!this.multiple) {
@@ -111,35 +122,45 @@ export default createComponent({
     columns: {
       deep: true,
       handler(val) {
-        const showValues = []
-        if (this.multiple) {
-          const count = this.newValue.length
-          let valueCount = 1
-          for (var i=0; i < val.length; i++) {
-            const item = val[i]
-            if (this.newValue.include(item.value)) {
-              showValues.push(item.label || item.value)
-              valueCount += 1
-              if (valueCount >= count) {
-                break
-              }
-            }
-          }
-        } else {
-          for (var i=0; i < val.length; i++) {
-            const item = val[i]
-            if (item.value === this.newValue) {
-              showValues.push(item.label || item.value)
-              break
-            }
-          }
+      }
+    },
+    initData: {
+      deep: true,
+      handler(val) {
+        if (val.value && val.columns.length > 0 && !val.showValue) {
+          this.initSelectDatas()
         }
-        this.showValue = showValues.join()
       }
     }
   },
 
   methods: {
+    initSelectDatas() {
+      const showValues = []
+      if (this.multiple) {
+        const count = this.value.length
+        let valueCount = 1
+        for (var i=0; i < this.columns.length; i++) {
+          const item = this.columns[i]
+          if (this.value.include(item.value)) {
+            showValues.push(item.label || item.value)
+            valueCount += 1
+            if (valueCount >= count) {
+              break
+            }
+          }
+        }
+      } else {
+        for (var i=0; i < this.columns.length; i++) {
+          const item = this.columns[i]
+          if (item.value === this.value) {
+            showValues.push(item.label || item.value)
+            break
+          }
+        }
+      }
+      this.showValue = showValues.join()
+    },
     handleCheck(item, index) {
       if (this.multiple) {
         this.$refs.selectMutil[index].toggle()

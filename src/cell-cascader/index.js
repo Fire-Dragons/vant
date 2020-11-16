@@ -104,7 +104,16 @@ export default createComponent({
     labelKey() {
       return this.props.label || 'label'
     },
+    initData() {
+      const { value, columns, showValue } = this
+      return {
+        value,
+        columns,
+        showValue
+      }
+    }
   },
+
 
   watch: {
     newValue(val, oldValue) {
@@ -119,7 +128,15 @@ export default createComponent({
     options: {
       depp: true,
       handler(val) {
-        this.initSelectDatas(this.value)
+
+      }
+    },
+    initData: {
+      deep: true,
+      handler(val) {
+        if (val.value && val.columns.length > 0 && !val.showValue) {
+          this.initSelectDatas(val.value)
+        }
       }
     }
   },
@@ -138,6 +155,27 @@ export default createComponent({
       }
       return option
     },
+    getOption(val, option) {
+      const options = []
+      if (option[this.valueKey] === val) {
+        options.push(option)
+      } else {
+        const { level } = this
+        this.getDatas(option, false)
+        if (level !== this.level) {
+          for (var i=0; i < this.options.length; i++) {
+            const element = this.options[i]
+            const child_option = this.getOption(val, element)
+            if (child_option.length > 0) {
+              options.push(option)
+            }
+            // eslint-disable-next-line prefer-spread
+            options.push.apply(options, child_option)
+          }
+        }
+      }
+      return options
+    },
     initSelectDatas(val) {
       if (this.selectDatas.length !== 0 && !this.showValue) {
         this.showValue = this.selectDatas.join('/')
@@ -148,7 +186,7 @@ export default createComponent({
       }
       if (Array.isArray(val)) {
         val.forEach(element => {
-          const item = this.  getItem(element, this.options)
+          const item = this.getItem(element, this.options)
           if (item[this.labelKey] && item[this.valueKey]) {
             const value = {}
             value[this.labelKey] = item[this.labelKey]
@@ -158,20 +196,34 @@ export default createComponent({
             this.getDatas(item, false)
           }
         })
-        const _data = this.selectDatas.map(item => {
-          return item[this.labelKey]
-        })
-        if (_data) {
-          this.showValue = _data.join('/')
-        } else if (Array.isArray(this.newValue)) {
-          this.showValue = this.newValue.join('/')
-        } else {
-          this.showValue = this.newValue
+      } else {
+        for (var i=0; i < this.options.length; i++) {
+          const element = this.options[i]
+          const items = this.getOption(val, element)
+          if (items.length > 0) {
+            for (var j=0; j < items.length; j++) {
+              const item = items[j]
+              const value = {}
+              value[this.labelKey] = item[this.labelKey]
+              value[this.valueKey] = item[this.valueKey]
+              this.lastSelectValue = val
+              this.selectDatas.push(value)
+            }
+            break
+          }
         }
-        this.options = this.columns
+      }
+      const _data = this.selectDatas.map(item => {
+        return item[this.labelKey]
+      })
+      if (_data) {
+        this.showValue = _data.join('/')
+      } else if (Array.isArray(this.newValue)) {
+        this.showValue = this.newValue.join('/')
       } else {
         this.showValue = this.newValue
       }
+      this.options = this.columns
     },
     getDatas(node, levelNotChange) {
       this.loading = true

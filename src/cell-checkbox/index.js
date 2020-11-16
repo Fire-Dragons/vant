@@ -68,6 +68,17 @@ export default createComponent({
     };
   },
 
+  computed: {
+    initData() {
+      const { value, columns, showValue } = this
+      return {
+        value,
+        columns,
+        showValue
+      }
+    }
+  },
+
   watch: {
     newValue(val) {
       this.$emit('input', val)
@@ -76,26 +87,36 @@ export default createComponent({
     columns: {
       deep: true,
       handler(val) {
-        const showValues = []
-        const count = this.newValue.length
-        let valueCount = 1
-        for (var i=0; i < val.length; i++) {
-          const item = val[i]
-          if (this.newValue.include(item.value)) {
-            showValues.push(item.label || item.value)
-            this.$refs.selectMutil[i].toggle(true)
-            valueCount += 1
-            if (valueCount >= count) {
-              break
-            }
-          }
+      }
+    },
+    initData: {
+      deep: true,
+      handler(val) {
+        if (val.value && val.columns.length > 0 && !val.showValue) {
+          this.initSelectDatas()
         }
-        this.showValue = showValues.join()
       }
     }
   },
 
   methods: {
+    initSelectDatas() {
+      const showValues = []
+      const count = this.value.length
+      let valueCount = 1
+      for (var i=0; i < this.columns.length; i++) {
+        const item = this.columns[i]
+        if (this.value.include(item.value)) {
+          showValues.push(item.label || item.value)
+          this.$refs.selectMutil[i].toggle(true)
+          valueCount += 1
+          if (valueCount >= count) {
+            break
+          }
+        }
+      }
+      this.showValue = showValues.join()
+    },
     handleCheck(item, index) {
       this.$refs.selectMutil[index].toggle()
     },
