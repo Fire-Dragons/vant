@@ -133,6 +133,7 @@ export default createComponent({
     },
     initData: {
       deep: true,
+      immediate: true,
       handler(val) {
         if (val.value && val.columns.length > 0 && !val.showValue) {
           this.initSelectDatas(val.value)
