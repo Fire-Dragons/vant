@@ -26,11 +26,11 @@ export default createComponent({
   mixins: [FieldMixin],
 
   provide() {
-    if (!this.vanField) {
+    // if (!this.vanField) {
       return {
         vanField: this,
       };
-    }
+    // }
   },
 
   inject: {
@@ -109,7 +109,7 @@ export default createComponent({
   },
 
   mounted() {
-    if (!this.vanField) {
+    if (this.name) {
       this.updateValue(this.value, this.formatTrigger);
       this.$nextTick(this.adjustSize);
 

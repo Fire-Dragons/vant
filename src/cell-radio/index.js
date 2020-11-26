@@ -137,7 +137,7 @@ export default createComponent({
           disabled={this.disabled}
           clickable={this.clickable}
           border={this.border}
-          readonly={this.readonly}
+          readonly
           isLink={this.isLink}
           placeholder={this.placeholder}
           onClick={this.onClick}
