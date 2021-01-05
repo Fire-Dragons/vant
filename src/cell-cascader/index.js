@@ -77,6 +77,11 @@ export default createComponent({
       type: Boolean,
       default: true
     },
+    // 选中值列表
+    checkData: {
+      type: Array,
+      default: () => { return [] }
+    },
     value: [String, Number, Array]
   },
 
@@ -90,7 +95,8 @@ export default createComponent({
       level: 1,
       cache: {},
       loading: false,
-      newValue: this.value
+      newValue: this.value,
+      overflowHidden: false
     };
   },
 
@@ -105,11 +111,12 @@ export default createComponent({
       return this.props.label || 'label'
     },
     initData() {
-      const { value, columns, showValue } = this
+      const { value, columns, showValue, checkData } = this
       return {
         value,
         columns,
-        showValue
+        showValue,
+        checkData
       }
     }
   },
@@ -131,11 +138,17 @@ export default createComponent({
 
       }
     },
+    checkData: {
+      deep: true,
+      handler(val) {
+        this.selectDatas = val
+      }
+    },
     initData: {
       deep: true,
       immediate: true,
       handler(val) {
-        if (val.value && val.columns.length > 0 && !val.showValue) {
+        if (val.value && val.columns.length > 0 && val.checkData.length > 0 && !val.showValue) {
           this.initSelectDatas(val.value)
         }
       }
@@ -179,7 +192,11 @@ export default createComponent({
     },
     initSelectDatas(val) {
       if (this.selectDatas.length !== 0 && !this.showValue) {
-        this.showValue = this.selectDatas.join('/')
+        // this.showValue = this.selectDatas.join('/')
+        const labels = this.selectDatas.map(item => {
+          return item.label
+        })
+        this.showValue = labels.join('/')
         return
       }
       if (this.showValue) {
@@ -228,6 +245,7 @@ export default createComponent({
     },
     getDatas(node, levelNotChange) {
       this.loading = true
+      this.overflowHidden = true
       const resolve = dataList => {
         this.cache[this.level] = this.options
         if (dataList && Array.isArray(dataList) && dataList.length > 0) {
@@ -237,6 +255,7 @@ export default createComponent({
           }
         }
         this.loading = false
+        this.overflowHidden = false
       };
       let { level } = this
       if (!levelNotChange) {
@@ -264,6 +283,7 @@ export default createComponent({
         const value = {}
         value[this.labelKey] = item[this.labelKey]
         value[this.valueKey] = item[this.valueKey]
+        value[this.childrenKey] = item[this.childrenKey]
         if (this.level === 1) {
           this.selectDatas = [value]
         }else {
@@ -272,6 +292,7 @@ export default createComponent({
       } else {
         this.selectDatas[this.selectDatas.length - 1][this.labelKey] = item[this.labelKey]
         this.selectDatas[this.selectDatas.length - 1][this.valueKey] = item[this.valueKey]
+        this.selectDatas[this.selectDatas.length - 1][this.childrenKey] = item[this.childrenKey]
       }
       this.lastSelectValue = item[this.valueKey]
       this.getDatas(item)
@@ -288,6 +309,7 @@ export default createComponent({
       if (index === 0) {
         this.options = this.columns
         this.level = 1
+        this.cache = {}
       } else {
         const _item = this.selectDatas[index - 1]
         this.level = this.selectDatas.length
@@ -300,9 +322,10 @@ export default createComponent({
         return
       }
       this.$emit('click', event)
-      if (this.level in this.cache) {
-        this.options = this.cache[this.level]
-      }
+      // if (this.level in this.cache) {
+      //   this.options = this.cache[this.level]
+      // }
+      this.options = this.columns
       this.showPicker = true
     },
 
@@ -327,7 +350,8 @@ export default createComponent({
       // this.selectDatas = []
       // this.lastSelectValue = null
       this.level = 1
-      this.options = []
+      // this.options = []
+      this.cache = {}
     },
 
     genLoading() {
@@ -421,7 +445,7 @@ export default createComponent({
   },
 
   render() {
-    const style = "max-height: 260px; overflow-y: auto; position: relative;"
+    const style = this.overflowHidden ? "max-height: 260px; overflow-y: hidden; position: relative;" : "max-height: 260px; overflow-y: auto; position: relative;"
     const popStyle = "{maxHeight: '60%'}"
     const position = "bottom"
     return (
@@ -450,8 +474,8 @@ export default createComponent({
               <div style={style}>
                 <CellGroup>
                   {this.genCell()}
-                  {this.genLoading()}
                 </CellGroup>
+                {this.genLoading()}
               </div>
           </Popup>
       </div>
