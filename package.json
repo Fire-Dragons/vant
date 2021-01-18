@@ -1,5 +1,5 @@
 {
-  "name": "@Fire-Dragons/vant",
+  "name": "@hzenfo/vant",
   "version": "0.2.2",
   "description": "Mobile UI Components built on Vue",
   "main": "lib/index.js",
@@ -13,7 +13,7 @@
     "vetur"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "bootstrap": "yarn || npm i",
@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Fire-Dragons/vant.git"
+    "url": "git+ssh://git@github.com/Fire-Dragons/vant.git"
   },
   "keywords": [
     "ui",
@@ -108,5 +108,14 @@
   "browserslist": [
     "Android >= 4.0",
     "iOS >= 8"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/Fire-Dragons/vant/issues"
+  },
+  "homepage": "https://github.com/Fire-Dragons/vant#readme",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  }
 }
