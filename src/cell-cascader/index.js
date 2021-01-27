@@ -118,6 +118,22 @@ export default createComponent({
         showValue,
         checkData
       }
+    },
+    divStyle() { // 数据列表样式
+      const { overflowHidden, options } = this
+      let styleSheet = {}
+      styleSheet.maxHeight = '260px'
+      styleSheet.position = 'relative'
+      styleSheet.height = '100px'
+      if (overflowHidden) {
+        styleSheet.overflowY = 'hidden'
+      } else {
+        styleSheet.overflowY = 'auto'
+      }
+      if (options.length > 0) {
+        styleSheet.height = 'auto'
+      }
+      return styleSheet
     }
   },
 
@@ -130,6 +146,9 @@ export default createComponent({
       deep: true,
       handler(val) {
         this.options = val
+        if (this.options.length > 0) {
+          this.loading = false
+        }
       }
     },
     options: {
@@ -296,6 +315,12 @@ export default createComponent({
       }
       this.lastSelectValue = item[this.valueKey]
       this.getDatas(item)
+      this.$nextTick(() => {
+        const _scrollTop = document.getElementsByClassName('van-cell-cascader__list')[0].scrollTop
+        if (_scrollTop > 0) {
+          document.getElementsByClassName('van-cell-cascader__list')[0].scrollTop = 0
+        }
+      })
     },
 
     changeCheck(item, index) {
@@ -327,6 +352,9 @@ export default createComponent({
       // }
       this.options = this.columns
       this.showPicker = true
+      if (this.options.length < 1) {
+        this.loading = true
+      }
     },
 
     checkOption() {
@@ -445,7 +473,7 @@ export default createComponent({
   },
 
   render() {
-    const style = this.overflowHidden ? "max-height: 260px; overflow-y: hidden; position: relative;" : "max-height: 260px; overflow-y: auto; position: relative;"
+    // const style = this.overflowHidden ? "max-height: 260px; overflow-y: hidden; position: relative;" : "max-height: 260px; overflow-y: auto; position: relative;"
     const popStyle = "{maxHeight: '60%'}"
     const position = "bottom"
     return (
@@ -471,7 +499,10 @@ export default createComponent({
               <div class={bem('check')}>
                 {this.genTopClick()}
               </div>
-              <div style={style}>
+              <div
+                style={this.divStyle}
+                class={bem('list')}
+                >
                 <CellGroup>
                   {this.genCell()}
                 </CellGroup>

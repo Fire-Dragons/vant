@@ -107,7 +107,7 @@ export default createComponent({
       let valueCount = 1
       for (var i=0; i < this.columns.length; i++) {
         const item = this.columns[i]
-        if (this.value.include(item.value)) {
+        if (this.value.includes(item.value)) {
           showValues.push(item.label || item.value)
           this.$refs.selectMutil[i].toggle(true)
           valueCount += 1
